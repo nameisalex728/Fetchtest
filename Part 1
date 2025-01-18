@@ -1,0 +1,24 @@
+-- Part 1
+select * from PRODUCTS_TAKEHOME
+limit 100;
+select * from TRANSACTION_TAKEHOME
+limit 100;
+select * from USER_TAKEHOME
+limit 100;
+-- checking for null rows of the PK/FKs
+select count(*) from PRODUCTS_TAKEHOME
+where barcode is NULL
+limit 100;
+select count(*) from USER_TAKEHOME
+where id is NULL;
+select count(*) from TRANSACTION_TAKEHOME
+where barcode is NULL or user_id is NULL;
+select count(*) from TRANSACTION_TAKEHOME
+where barcode is NULL AND user_id is NULL;
+/*
+I just did the above queries to confirm the tables were imported properly and to get a quick look at each table to see what is there and what each piece means. I then also went into the CSV files to confirm as well. As far as data quality, I do see some blank/NULL valuess for some rows of data that seems like it should be there. For example, a product with no manufacturer/.brand is odd but not the end of the world as long as there is a barcode. However, if there is no barcode this is a problem as that data is not verifiable in the Transactions table as it would lump all those under one specific barcode called NULL. This appears to be the case here, and unfortunately when running next steps, I will have to discard any rows where the barcode is null. User ID is not an issue in this way at least.
+
+In terms of other data quality, I don't think it matters if there are empty/NULL fields for any other columns in any of the tables, as we can simply ignore those missing values.
+
+Regarding any sort of other visual support for this, I do not believe it is necessary and can get enough info from the above queries and manual perusing of the CSV files for a couple hundred rows to get an idea of what I am working with.
+*/
