@@ -1,0 +1,14 @@
+Dear [XXXX],
+
+I have completed a review of those data tables you sent me. A couple of notes I had before getting into the analysis regarding some quality control problems with this data:
+
+•	There were a surprising amount of missing values. Some of this did not matter in the end, however it does cause a major issue when I noticed a lot of missing barcodes in each file. Because of this, regardless of what the transaction or product was the analysis ran only sees this as one lumped group together. Because of that, a lot of the data simply had to be ignored
+•	The transaction table probably should be reworked (note: I did not note this in my code, this is a newer observation upon reflection). It seemed to duplicate transactions based on some unknown metric, I suspect with the quantity and sale columns.
+
+Onto the actual analysis. Because of the missing barcodes, I found the most useful pieces of data were that we had 10 users we would consider whales or Power users, as they have spent at least $250 each. Additionally, it looks like Tostitos is the leading brand for Dips & Salsa over all others, almost doubling the pace of any other brand. Any other avenues of analysis I looked into ended with too small of a sample for comfort, so I will not highlight these.
+
+In regards to what we can do with this information - I would absolutely consider running ad campaigns based on keywords of 'Dips & Salsa' to push Tostitos as a leading brand on users. Additionally, continuing to encourage regular spending to drive more users into that Power status through campaigns, notifications and other methods is important too. As far as data problems, the change to the Transaction table I mentioned above would help immensely, as well as figuring out why there are so many empty or missing values, especially with the barcodes. There were over 5000 rows where it was missing, so that is a lot of data that could change the above analysis significantly.
+
+Thanks for reading through this, I look forward to hearing your thoughts on the matter.
+
+Alex
