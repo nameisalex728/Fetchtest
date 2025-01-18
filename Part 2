@@ -1,0 +1,44 @@
+-- What are the top 5 brands by receipts scanned among users 21 and over?
+select brand, count(DISTINCT receipt_id) as totals from TRANSACTION_TAKEHOME t
+left outer join USER_TAKEHOME u on u.ID=t.USER_ID
+right outer join PRODUCTS_TAKEHOME p on p.BARCODE=t.BARCODE
+where t.BARCODE is not null 
+and (JULIANDAY(date(purchase_date))-JULIANDAY(date(u.BIRTH_DATE))>(21*365)) 
+and u.BIRTH_DATE is not null and brand !=''
+group by brand
+order by totals desc
+/*
+Based on the query above, the top 5 brands are Nerds Candy, Dove, followed by 6-way tie between Trident, Sour Patch Kids, Meijer, Hershey's, Great Value and Coca-Cola. There is minimal separation between those brands as the top 2 two had 3 purchases, while the other six had 2. 
+*/
+
+-- Which is the leading brand in the Dips & Salsa category?
+/*
+Bit of a vague question, but for this I will use the sum of FINAL_QUANTITY to answer this question. From there I will order the top brands by that value, and answer from there. However, this suggests a similar, maybe even simplified query would suffice for answering this question. To showcase my understanding of different types of queries, I want to approach it when a nested query as an inner join even if it's not the most direct approach
+*/
+select pp.brand, sum(final_quantity) as totals from TRANSACTION_TAKEHOME t
+inner join (
+select barcode, brand from PRODUCTS_TAKEHOME
+where barcode is not null and brand !='' and
+(category_1 like('%dips%') or category_2 like('%dips%') 
+      or category_3 like('%dips%') or category_4 like('%dips%')))
+pp on t.barcode=pp.BARCODE 
+where t.barcode is not NULL
+group by pp.brand
+order by totals desc
+/*
+This data, ordered properly, suggests that TOSTITOS is the leading brand for this category based on the total amount purchased. There are other ways to interpret this question so I do not expect this to be the only way to contemplate a response.
+*/
+
+-- Who are Fetch’s power users?
+/*
+I would define a power user the same as a whale for a mobile game - someone who has spent X amount of real world currency on your app. In most metrics I have seen, I define this as greater than $250, or equivalent. To get this, I would do a sum-product of each user's purchases with the FINAL_QUANTITY and FINAL_SALE columns. Now, an additional issue presents itself from looking at the tables - zero quantity entries are labeled with the string 'zero' instead of an integer. So I will need to update those values first before running the query.
+*/
+update TRANSACTION_TAKEHOME set final_quantity=0 where final_quantity='zero'
+-- now to the actual query
+select user_id, sum(final_quantity*final_sale) as totalSpent  from TRANSACTION_TAKEHOME
+where final_quantity is not null and  final_sale!=''
+group by user_id having totalSpent>250
+order by totalSpent desc
+/*
+I recognized that this query in particular needed the GROUP BY...HAVING clause to get the list properly. It looks like there are 10 "power users" with the most a single person spent being over $1600.
+*/
